@@ -19,7 +19,7 @@ The app includes authentication, product browsing, cart functionality, checkout 
 ##  Project Structure
 - **lib/** → Main Flutter source code (UI, logic, services)  
 - **assets/** → Images and JSON data for products  
-- **android/**, **ios/**, **windows/**, **macos/**, **linux/**, **web/** → Auto-generated platform code  
+- **android/**, → Android-specific configuration (Gradle, Manifest, Firebase setup)  
 
 ---
 
