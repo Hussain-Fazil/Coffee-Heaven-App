@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:battery_plus/battery_plus.dart'; // ✅ for battery sensor
+import 'package:battery_plus/battery_plus.dart'; // for battery sensor
 import 'login_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -176,7 +176,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: textColor)),
             Text(label,
-                style: TextStyle(fontSize: 12, color: subTextColor)), // ✅ smaller label
+                style: TextStyle(fontSize: 12, color: subTextColor)), //  smaller label
           ],
         ),
       ),
