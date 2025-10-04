@@ -1,16 +1,42 @@
-# coffee_app
+# Coffee Heaven 
 
-A new Flutter project.
+Coffee Heaven is a Flutter-based mobile application that provides a smooth and modern UI for exploring and purchasing coffee products.  
+The app includes authentication, product browsing, cart functionality, checkout flow, profile management, and Firebase integration.  
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+##  Features
+- User authentication (login, signup, forgot password)  
+- Home page with navigation bar  
+- Coffee products listing with detailed view  
+- Add to cart and checkout flow  
+- Profile and about page  
+- Firebase authentication integration  
+- Responsive design for Android  
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+##  Project Structure
+- **lib/** → Main Flutter source code (UI, logic, services)  
+- **assets/** → Images and JSON data for products  
+- **android/**, **ios/**, **windows/**, **macos/**, **linux/**, **web/** → Auto-generated platform code  
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+##  Tech Stack
+- **Framework**: Flutter  
+- **Language**: Dart  
+- **Backend/Services**: Firebase Authentication  
+- **State Management**: Provider  
+
+---
+
+##  Language Statistics
+This repository uses a `.gitattributes` file to configure GitHub Linguist so that only Dart code is counted in the language statistics.  
+All platform-specific generated code (Android, iOS, macOS, Windows, Linux, Web) is marked as `vendored` and excluded.  
+As a result, the repo correctly shows **100% Dart**, reflecting the true source code of this Flutter project.  
+
+---
+
+##  Repository
+GitHub Repo Link: [Coffee-Heaven-App](https://github.com/Hussain-Fazil/Coffee-Heaven-App)  
