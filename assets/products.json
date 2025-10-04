@@ -1,0 +1,215 @@
+[
+  {
+    "id": 1,
+    "name": "Classic Cappuccino",
+    "img": "assets/images/cap1.png",
+    "price": 4.25,
+    "desc": "A timeless mix of espresso, steamed milk, and a thick layer of foam.",
+    "category": "Cappuccino"
+  },
+  {
+    "id": 2,
+    "name": "Iced Cappuccino",
+    "img": "assets/images/cap2.png",
+    "price": 4.50,
+    "desc": "Chilled espresso blended with milk and foam, refreshing and smooth.",
+    "category": "Cappuccino"
+  },
+  {
+    "id": 3,
+    "name": "Mocha Cappuccino",
+    "img": "assets/images/cap3.png",
+    "price": 4.75,
+    "desc": "A cappuccino twist with rich chocolate flavor for mocha lovers.",
+    "category": "Cappuccino"
+  },
+  {
+    "id": 4,
+    "name": "Vanilla Cappuccino",
+    "img": "assets/images/cap4.png",
+    "price": 5.00,
+    "desc": "Sweet vanilla infused with bold espresso and creamy milk foam.",
+    "category": "Cappuccino"
+  },
+
+  {
+    "id": 5,
+    "name": "Classic Americano",
+    "img": "assets/images/ame1.png",
+    "price": 3.75,
+    "desc": "Espresso diluted with hot water for a smooth, rich flavor.",
+    "category": "Americano"
+  },
+  {
+    "id": 6,
+    "name": "Iced Americano",
+    "img": "assets/images/ame2.png",
+    "price": 3.95,
+    "desc": "Espresso over ice, bold and refreshing for hot days.",
+    "category": "Americano"
+  },
+  {
+    "id": 7,
+    "name": "White Americano",
+    "img": "assets/images/ame3.png",
+    "price": 4.10,
+    "desc": "A smoother version of Americano with a splash of milk.",
+    "category": "Americano"
+  },
+  {
+    "id": 8,
+    "name": "Caramel Americano",
+    "img": "assets/images/ame4.png",
+    "price": 4.25,
+    "desc": "Americano infused with sweet caramel syrup for a tasty kick.",
+    "category": "Americano"
+  },
+
+  {
+    "id": 9,
+    "name": "Classic Iced Coffee",
+    "img": "assets/images/ice1.png",
+    "price": 3.50,
+    "desc": "Bold brewed coffee poured over ice for instant refreshment.",
+    "category": "Iced Coffee"
+  },
+  {
+    "id": 10,
+    "name": "Vanilla Iced Coffee",
+    "img": "assets/images/ice2.png",
+    "price": 3.80,
+    "desc": "Iced coffee with a smooth vanilla twist, light and sweet.",
+    "category": "Iced Coffee"
+  },
+  {
+    "id": 11,
+    "name": "Mocha Iced Coffee",
+    "img": "assets/images/ice3.png",
+    "price": 3.95,
+    "desc": "Refreshing iced coffee with rich mocha chocolate blend.",
+    "category": "Iced Coffee"
+  },
+  {
+    "id": 12,
+    "name": "Caramel Iced Coffee",
+    "img": "assets/images/ice4.png",
+    "price": 4.10,
+    "desc": "Cool iced coffee drizzled with caramel syrup.",
+    "category": "Iced Coffee"
+  },
+  {
+    "id": 13,
+    "name": "Iced Cold Brew",
+    "img": "assets/images/ice5.png",
+    "price": 4.25,
+    "desc": "Slow-steeped coffee for smooth, less acidic flavor.",
+    "category": "Iced Coffee"
+  },
+  {
+    "id": 14,
+    "name": "Iced Latte",
+    "img": "assets/images/ice6.png",
+    "price": 4.50,
+    "desc": "Chilled espresso mixed with milk for creamy refreshment.",
+    "category": "Iced Coffee"
+  },
+
+  {
+    "id": 15,
+    "name": "Single Shot Espresso",
+    "img": "assets/images/esp1.png",
+    "price": 2.50,
+    "desc": "A strong single shot of espresso, pure coffee essence.",
+    "category": "Espresso"
+  },
+  {
+    "id": 16,
+    "name": "Double Shot Espresso",
+    "img": "assets/images/esp2.png",
+    "price": 3.00,
+    "desc": "Double the espresso for double the energy.",
+    "category": "Espresso"
+  },
+  {
+    "id": 17,
+    "name": "Ristretto",
+    "img": "assets/images/esp3.png",
+    "price": 3.25,
+    "desc": "A shorter, more concentrated espresso shot with bold flavor.",
+    "category": "Espresso"
+  },
+  {
+    "id": 18,
+    "name": "Lungo",
+    "img": "assets/images/esp4.png",
+    "price": 3.50,
+    "desc": "An espresso shot pulled longer with more water.",
+    "category": "Espresso"
+  },
+
+  {
+    "id": 19,
+    "name": "Classic Mocha",
+    "img": "assets/images/mocha1.png",
+    "price": 4.50,
+    "desc": "Espresso and hot chocolate topped with whipped cream.",
+    "category": "Mocha"
+  },
+  {
+    "id": 20,
+    "name": "White Chocolate Mocha",
+    "img": "assets/images/mocha2.png",
+    "price": 4.75,
+    "desc": "Smooth mocha blended with sweet white chocolate.",
+    "category": "Mocha"
+  },
+  {
+    "id": 21,
+    "name": "Caramel Mocha",
+    "img": "assets/images/mocha3.png",
+    "price": 4.85,
+    "desc": "Mocha infused with caramel for rich sweetness.",
+    "category": "Mocha"
+  },
+  {
+    "id": 22,
+    "name": "Iced Mocha",
+    "img": "assets/images/mocha4.png",
+    "price": 5.00,
+    "desc": "Chilled mocha blend, creamy and refreshing.",
+    "category": "Mocha"
+  },
+
+  {
+    "id": 23,
+    "name": "Classic Latte",
+    "img": "assets/images/latte1.png",
+    "price": 4.00,
+    "desc": "Espresso mixed with steamed milk and light foam.",
+    "category": "Latte"
+  },
+  {
+    "id": 24,
+    "name": "Vanilla Latte",
+    "img": "assets/images/latte2.png",
+    "price": 4.25,
+    "desc": "Latte with added vanilla sweetness.",
+    "category": "Latte"
+  },
+  {
+    "id": 25,
+    "name": "Caramel Latte",
+    "img": "assets/images/latte3.png",
+    "price": 4.40,
+    "desc": "Classic latte enhanced with caramel flavor.",
+    "category": "Latte"
+  },
+  {
+    "id": 26,
+    "name": "Hazelnut Latte",
+    "img": "assets/images/latte4.png",
+    "price": 4.50,
+    "desc": "Nutty hazelnut flavor blended into a creamy latte.",
+    "category": "Latte"
+  }
+]
