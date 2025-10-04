@@ -1,0 +1,138 @@
+#  Project metadata
+name: coffee_app
+description: "A new Flutter project."
+publish_to: 'none'   # This app won’t be published to pub.dev
+
+version: 1.0.0+1     # Version name + build number
+
+#  Environment (Dart/Flutter version requirement)
+environment:
+  sdk: ^3.8.1
+
+#  Dependencies (the libraries/packages your app uses)
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # iOS-style icons (used in many Flutter templates)
+  cupertino_icons: ^1.0.8
+
+  # For showing splash screen before app loads
+  flutter_native_splash: ^2.4.6
+
+  # For saving small data locally (cart, login info, etc.)
+  shared_preferences: ^2.2.3
+
+  # For state management (we use it for CartProvider)
+  provider: ^6.1.0
+
+  # For making API calls (fetch JSON from internet)
+  http: ^1.1.0
+
+  # For checking network connectivity (online/offline)
+  connectivity_plus: ^6.0.3
+
+  # for location geolocator
+  geolocator: ^13.0.1
+
+  # for google maps
+  google_maps_flutter: ^2.10.0
+
+  # check battery status
+  battery_plus: ^7.0.0
+
+  # for sensors
+  sensors_plus: ^5.0.1
+
+  # Image picker
+  image_picker: ^1.2.0
+
+
+  #  Firebase packages
+  firebase_core: ^4.1.1       # for using Firebase
+  firebase_auth: ^6.1.0       # For user authentication (login/signup)
+  cloud_firestore: ^6.0.2
+  firebase_storage: ^13.0.2    
+
+#  Developer dependencies (used only during development)
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0   # Helps catch common mistakes
+
+#  Flutter section (design, assets, etc.)
+flutter:
+  uses-material-design: true   # Enables Material icons by default
+
+  #  Assets (all the images + JSON file app needs)
+  assets:
+    # Backgrounds & splash images
+    - assets/images/coffee_bg.png
+    - assets/images/login_bg.png
+    - assets/images/coffee_splash.png
+    - assets/images/signup.png
+
+    # Promo banners
+    - assets/images/promo.png
+    - assets/images/promo2.png
+    - assets/images/promo3.png
+
+    # Home coffee images
+    - assets/images/c1.png
+    - assets/images/c2.png
+    - assets/images/c3.png
+    - assets/images/c4.png
+    - assets/images/c5.png
+    - assets/images/c6.png
+
+    # Cappuccino
+    - assets/images/cap1.png
+    - assets/images/cap2.png
+    - assets/images/cap3.png
+    - assets/images/cap4.png
+
+    # Americano
+    - assets/images/ame1.png
+    - assets/images/ame2.png
+    - assets/images/ame3.png
+    - assets/images/ame4.png
+
+    # Iced Coffee
+    - assets/images/ice1.png
+    - assets/images/ice2.png
+    - assets/images/ice3.png
+    - assets/images/ice4.png
+    - assets/images/ice5.png
+    - assets/images/ice6.png
+
+    # Latte
+    - assets/images/latte1.png
+    - assets/images/latte2.png
+    - assets/images/latte3.png
+    - assets/images/latte4.png
+
+    # Mocha
+    - assets/images/mocha1.png
+    - assets/images/mocha2.png
+    - assets/images/mocha3.png
+    - assets/images/mocha4.png
+
+    # Espresso
+    - assets/images/esp1.png
+    - assets/images/esp2.png
+    - assets/images/esp3.png
+    - assets/images/esp4.png
+
+    #  JSON file with all coffee product data
+    - assets/products.json
+
+#  Splash screen config (for flutter_native_splash)
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+  color: "#000000"     # Black background
+  image: assets/images/coffee_splash.png
+  android_gravity: fill
+  ios_content_mode: scaleAspectFill
+  fullscreen: true
