@@ -1,0 +1,10 @@
+# Tell GitHub Linguist to treat Dart as the main language
+*.dart linguist-detectable=true
+
+# Ignore platform-specific generated code
+android/** linguist-vendored
+ios/** linguist-vendored
+macos/** linguist-vendored
+windows/** linguist-vendored
+linux/** linguist-vendored
+web/** linguist-vendored
