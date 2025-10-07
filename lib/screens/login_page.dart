@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
                       Text(
                         "Coffee Heaven",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 81, 65, 58),
+                          color: Color.fromARGB(255, 130, 94, 78),
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
                         ),
