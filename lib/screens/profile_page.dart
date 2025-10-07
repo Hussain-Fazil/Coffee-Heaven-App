@@ -267,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: boxTextColor), // 👈 white font on box
+                              color: boxTextColor), 
                         ),
                         const SizedBox(height: 6),
                         Text(
