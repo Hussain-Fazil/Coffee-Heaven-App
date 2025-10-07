@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:coffee_app/firebase_options.dart';
 import 'providers/cart_provider.dart';
 import 'providers/theme_provider.dart';
 import 'screens/login_page.dart';
+import 'screens/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,7 +14,6 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  
   final cartProvider = CartProvider();
   await cartProvider.loadCart();
 
@@ -35,7 +36,7 @@ class CoffeeApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     return MaterialApp(
-      title: 'Blizz Cafe',
+      title: 'Coffee Heaven',
       debugShowCheckedModeBanner: false,
       themeMode: themeProvider.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
@@ -50,7 +51,27 @@ class CoffeeApp extends StatelessWidget {
           foregroundColor: Colors.white,
         ),
       ),
-      home: const WelcomeScreen(),
+      home: const AuthChecker(),
+    );
+  }
+}
+
+class AuthChecker extends StatelessWidget {
+  const AuthChecker({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          return const HomePage();
+        } else {
+          return const WelcomeScreen();
+        }
+      },
     );
   }
 }
@@ -105,7 +126,16 @@ class WelcomeScreen extends StatelessWidget {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                        PageRouteBuilder(
+                          pageBuilder: (_, __, ___) => const LoginPage(),
+                          transitionsBuilder: (_, animation, __, child) =>
+                              FadeTransition(
+                            opacity: animation,
+                            child: child,
+                          ),
+                          transitionDuration:
+                              const Duration(milliseconds: 400),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
