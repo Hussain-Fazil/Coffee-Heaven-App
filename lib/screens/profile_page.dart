@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:battery_plus/battery_plus.dart'; // for battery sensor
+import 'package:battery_plus/battery_plus.dart';
 import 'login_page.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final User? user = FirebaseAuth.instance.currentUser;
   Map<String, dynamic>? userData;
   bool isLoading = true;
-  int _batteryLevel = 100; // default battery level
+  int _batteryLevel = 100;
 
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -47,7 +47,6 @@ class _ProfilePageState extends State<ProfilePage> {
       });
       return;
     }
-
     try {
       final doc = await FirebaseFirestore.instance
           .collection("users")
@@ -155,7 +154,6 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  // small helper widget for stats card
   Widget buildStatCard(IconData icon, String value, String label,
       Color textColor, Color subTextColor, bool isDark) {
     return Expanded(
@@ -176,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     fontWeight: FontWeight.bold,
                     color: textColor)),
             Text(label,
-                style: TextStyle(fontSize: 12, color: subTextColor)), //  smaller label
+                style: TextStyle(fontSize: 12, color: subTextColor)),
           ],
         ),
       ),
@@ -190,6 +188,15 @@ class _ProfilePageState extends State<ProfilePage> {
     final bgColor = isDark ? Colors.black : const Color(0xFFF8F3E9);
     final appBarColor = isDark ? const Color(0xFF3A3A3A) : coffeeBrown;
     final cardColor = isDark ? const Color(0xFF2C2C2C) : coffeeBrown;
+
+    
+    final boxTextColor = (!isDark) ? Colors.white : Colors.white; 
+    final boxSubTextColor = (!isDark) ? Colors.white70 : Colors.white70;
+
+    
+    final appBarTextColor = (!isDark) ? Colors.white : Colors.white;
+    final appBarIconColor = (!isDark) ? Colors.white : null;
+
     final textColor = isDark ? Colors.white : Colors.black87;
     final subTextColor = isDark ? Colors.white70 : Colors.black54;
 
@@ -197,7 +204,8 @@ class _ProfilePageState extends State<ProfilePage> {
       backgroundColor: bgColor,
       appBar: AppBar(
         backgroundColor: appBarColor,
-        title: const Text("Profile"),
+        title: Text("Profile", style: TextStyle(color: appBarTextColor)),
+        iconTheme: IconThemeData(color: appBarIconColor),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -229,7 +237,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: (userData?['photoUrl'] == null ||
                                         userData!['photoUrl'] == "")
                                     ? Icon(Icons.person,
-                                        size: 60, color: textColor)
+                                        size: 60, color: boxTextColor)
                                     : null,
                               ),
                             ),
@@ -259,37 +267,33 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: textColor),
+                              color: boxTextColor), // 👈 white font on box
                         ),
                         const SizedBox(height: 6),
                         Text(
                           userData?['phone']?.isNotEmpty == true
                               ? userData!['phone']
                               : "phone",
-                          style:
-                              TextStyle(fontSize: 16, color: subTextColor),
+                          style: TextStyle(fontSize: 16, color: boxSubTextColor),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           (user?.email?.isNotEmpty == true)
                               ? user!.email!
                               : (userData?['email'] ?? "email"),
-                          style:
-                              TextStyle(fontSize: 14, color: subTextColor),
+                          style: TextStyle(fontSize: 14, color: boxSubTextColor),
                         ),
                         const SizedBox(height: 6),
                         Text(
                           "Member since: ${user?.metadata.creationTime?.toLocal().toString().split(' ').first ?? 'N/A'}",
-                          style:
-                              TextStyle(fontSize: 13, color: subTextColor),
+                          style: TextStyle(fontSize: 13, color: boxSubTextColor),
                         ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 24),
                   ExpansionTile(
-                    title:
-                        Text("Edit Profile", style: TextStyle(color: textColor)),
+                    title: Text("Edit Profile", style: TextStyle(color: textColor)),
                     leading: Icon(Icons.edit, color: textColor),
                     children: [
                       TextField(
@@ -320,21 +324,18 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   ListTile(
                     leading: Icon(Icons.lock_reset, color: textColor),
-                    title: Text("Change Password",
-                        style: TextStyle(color: textColor)),
+                    title: Text("Change Password", style: TextStyle(color: textColor)),
                     onTap: _resetPassword,
                   ),
                   ListTile(
                     leading: const Icon(Icons.logout, color: Colors.red),
-                    title: const Text("Log Out",
-                        style: TextStyle(color: Colors.red)),
+                    title: const Text("Log Out", style: TextStyle(color: Colors.red)),
                     onTap: () async {
                       await FirebaseAuth.instance.signOut();
                       if (!mounted) return;
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(
-                            builder: (_) => const LoginPage()),
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
                       );
                     },
                   ),

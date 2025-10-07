@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:coffee_app/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -20,13 +21,30 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Future<void> _sendResetEmail() async {
+    final email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      _showSnack("Please enter your email.");
+      return;
+    }
+
     setState(() => _isLoading = true);
+
     try {
-      await _auth.sendPasswordResetEmail(_emailController.text.trim());
-      _showSnack("Reset link sent. Check your email ✅");
+      await _auth.sendPasswordResetEmail(email);
+      _showSnack("Password reset link sent. Check your email ✅");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _showSnack("No account found with this email.");
+      } else if (e.code == 'invalid-email') {
+        _showSnack("Invalid email address.");
+      } else {
+        _showSnack("Something went wrong. Please try again.");
+      }
     } catch (e) {
       _showSnack("Error: ${e.toString()}");
     }
+
     setState(() => _isLoading = false);
   }
 
@@ -37,7 +55,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromARGB(255, 75, 47, 33), Color.fromARGB(255, 154, 141, 115)],
+            colors: [
+              Color.fromARGB(255, 75, 47, 33),
+              Color.fromARGB(255, 154, 141, 115)
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -52,8 +73,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   CircleAvatar(
                     radius: 40,
                     backgroundColor: Colors.white,
-                    child: Icon(Icons.lock_reset,
-                        size: 40, color: Colors.brown[700]),
+                    child:
+                        Icon(Icons.lock_reset, size: 40, color: Colors.brown[700]),
                   ),
                   const SizedBox(height: 20),
                   const Text(
@@ -61,14 +82,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(255, 255, 255, 255),
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 12),
                   const Text(
                     "Enter your email address and we'll send you a reset link.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Color.fromARGB(255, 255, 255, 255), fontSize: 15),
+                    style: TextStyle(color: Colors.white, fontSize: 15),
                   ),
                   const SizedBox(height: 30),
                   Container(

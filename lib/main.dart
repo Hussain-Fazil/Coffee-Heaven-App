@@ -12,14 +12,14 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
+  
+  final cartProvider = CartProvider();
+  await cartProvider.loadCart();
+
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) {
-          final cartProvider = CartProvider();
-          cartProvider.loadCart();
-          return cartProvider;
-        }),
+        ChangeNotifierProvider(create: (_) => cartProvider),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: const CoffeeApp(),

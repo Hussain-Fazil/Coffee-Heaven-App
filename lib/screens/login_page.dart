@@ -4,6 +4,7 @@ import 'signup_page.dart';
 import 'forgot_password_page.dart';
 import 'home_page.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -39,11 +40,14 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     setState(() => _isLoading = true);
+
     try {
       await _auth.loginWithEmail(
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
+
+      await FirebaseAuth.instance.currentUser?.reload();
 
       if (!mounted) return;
       _showSnack("Login successful ✅");
@@ -56,13 +60,13 @@ class _LoginPageState extends State<LoginPage> {
       String errorMessage = "Login failed. Please try again.";
 
       if (e.toString().contains('user-not-found')) {
-        errorMessage = "Oops! We couldn't find an account with this email.";
+        errorMessage = "No account found with this email.";
       } else if (e.toString().contains('wrong-password')) {
-        errorMessage = "Incorrect password. Please try again.";
+        errorMessage = "Incorrect password.";
       } else if (e.toString().contains('invalid-email')) {
-        errorMessage = "The email address is not valid.";
+        errorMessage = "Invalid email address.";
       } else if (e.toString().contains('network-request-failed')) {
-        errorMessage = "Network error. Please check your connection.";
+        errorMessage = "Network error. Check your connection.";
       }
 
       _showSnack(errorMessage);
@@ -83,7 +87,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Container(color: Colors.black.withOpacity(0.6)),
-
           SafeArea(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(24),
@@ -94,12 +97,12 @@ class _LoginPageState extends State<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(Icons.local_cafe, color: Color(0xFFB87352), size: 42),
+                      Icon(Icons.local_cafe, color: Color.fromARGB(255, 99, 82, 74), size: 42),
                       SizedBox(width: 8),
                       Text(
                         "Coffee Heaven",
                         style: TextStyle(
-                          color: Color.fromARGB(255, 224, 190, 175),
+                          color: Color.fromARGB(255, 81, 65, 58),
                           fontSize: 36,
                           fontWeight: FontWeight.bold,
                         ),
@@ -126,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                         const Text(
                           "Login",
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 139, 123, 115),
                             fontSize: 30,
                             fontWeight: FontWeight.bold,
                           ),
@@ -142,10 +145,13 @@ class _LoginPageState extends State<LoginPage> {
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           style: const TextStyle(color: Colors.white),
-                          decoration: _inputDecoration("Password", Icons.lock).copyWith(
+                          decoration: _inputDecoration("Password", Icons.lock)
+                              .copyWith(
                             suffixIcon: IconButton(
                               icon: Icon(
-                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 color: Colors.white70,
                               ),
                               onPressed: () {
@@ -163,7 +169,8 @@ class _LoginPageState extends State<LoginPage> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (_) => const ForgotPasswordPage()),
+                                    builder: (_) =>
+                                        const ForgotPasswordPage()),
                               );
                             },
                             child: const Text(

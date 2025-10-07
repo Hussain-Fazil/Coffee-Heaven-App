@@ -16,6 +16,7 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: appBarColor,
         centerTitle: true,
         title: const Text(
@@ -42,7 +43,6 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-
                 const Text(
                   'Coffee Heaven',
                   textAlign: TextAlign.center,
@@ -53,7 +53,6 @@ class AboutPage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-
                 Text(
                   'Your perfect coffee companion',
                   style: TextStyle(
@@ -64,7 +63,6 @@ class AboutPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 24),
-
                 Text(
                   'Coffee Heaven brings all kinds of coffee to your fingertips. '
                   'Explore varieties, customize flavors, and enjoy a smooth shopping experience.',
@@ -72,7 +70,6 @@ class AboutPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
@@ -91,7 +88,6 @@ class AboutPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 18),
-
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -115,16 +111,13 @@ class AboutPage extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 28),
-
                 Container(
                   height: 1.4,
                   width: double.infinity,
                   color: coffeeBrown.withOpacity(0.18),
                 ),
                 const SizedBox(height: 16),
-
                 Text(
                   'Powered by Coffee Heaven',
                   textAlign: TextAlign.center,

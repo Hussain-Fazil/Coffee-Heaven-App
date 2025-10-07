@@ -35,39 +35,29 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _loadUsername();
-
     _connectivity = Connectivity();
-
-    // check internet connection changes
     _subscription = _connectivity.onConnectivityChanged.listen((results) {
       if (!mounted) return;
-
-      final result =
-          results.isNotEmpty ? results.first : ConnectivityResult.none;
+      final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
       setState(() {
         _isOffline = (result == ConnectivityResult.none);
       });
-
       if (_isOffline) {
         _username = "Guest";
       } else {
         _loadUsername();
       }
     });
-
     _checkInitialConnection();
   }
 
   Future<void> _checkInitialConnection() async {
     final results = await _connectivity.checkConnectivity();
     if (!mounted) return;
-
-    final result =
-        results.isNotEmpty ? results.first : ConnectivityResult.none;
+    final result = results.isNotEmpty ? results.first : ConnectivityResult.none;
     setState(() {
       _isOffline = (result == ConnectivityResult.none);
     });
-
     if (_isOffline) {
       _username = "Guest";
     } else {
@@ -89,7 +79,6 @@ class _HomePageState extends State<HomePage> {
         });
         return;
       }
-
       final user = FirebaseAuth.instance.currentUser;
       if (user != null) {
         final doc = await FirebaseFirestore.instance
@@ -121,8 +110,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final bool isDark = themeProvider.isDarkMode;
-    final ThemeData theme =
-        isDark ? themeProvider.darkTheme : themeProvider.lightTheme;
+    final ThemeData theme = isDark ? themeProvider.darkTheme : themeProvider.lightTheme;
     final Color navColor = isDark ? darkAppBarNavColor : coffeeStripColor;
 
     final List<Widget> pages = [
@@ -137,12 +125,12 @@ class _HomePageState extends State<HomePage> {
       duration: const Duration(milliseconds: 250),
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
             _username ?? "Loading...",
             style: const TextStyle(fontSize: 16),
           ),
           actions: [
-            // toggle theme button
             IconButton(
               tooltip: isDark ? "Light mode" : "Dark mode",
               icon: Icon(
@@ -152,7 +140,6 @@ class _HomePageState extends State<HomePage> {
               ),
               onPressed: () => themeProvider.toggleTheme(),
             ),
-            // profile button
             IconButton(
               icon: const Icon(Icons.person, color: Colors.white),
               onPressed: () {
@@ -178,11 +165,11 @@ class _HomePageState extends State<HomePage> {
             if (_isOffline)
               MaterialBanner(
                 content: const Text(
-                  "You are offline. Using local data.",
+                  "Offline. You can still browse your saved coffees",
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
-                backgroundColor: Colors.red,
+                backgroundColor: const Color.fromARGB(255, 210, 86, 77),
                 actions: const [SizedBox.shrink()],
               ),
             Expanded(
@@ -263,7 +250,6 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Home content widget
 class HomeContent extends StatefulWidget {
   final Color stripColor;
   final bool isDark;
@@ -286,14 +272,12 @@ class _HomeContentState extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // search bar + promo slider
           Container(
             color: widget.isDark
                 ? Theme.of(context).scaffoldBackgroundColor
@@ -303,8 +287,7 @@ class _HomeContentState extends State<HomeContent> {
               children: [
                 Container(
                   decoration: BoxDecoration(
-                    color:
-                        widget.isDark ? const Color(0xFF1A1A1A) : Colors.white,
+                    color: widget.isDark ? const Color(0xFF1A1A1A) : Colors.white,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: TextField(
@@ -316,8 +299,7 @@ class _HomeContentState extends State<HomeContent> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(
                           color: cs.onSurface.withOpacity(0.3), fontSize: 15),
-                      contentPadding:
-                          const EdgeInsets.symmetric(vertical: 16),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
@@ -345,8 +327,7 @@ class _HomeContentState extends State<HomeContent> {
                       Positioned(
                         left: 8,
                         child: IconButton(
-                          icon: const Icon(Icons.arrow_back_ios,
-                              color: Colors.white),
+                          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
                           onPressed: () {
                             if (_currentPromo > 0) {
                               _promoController.previousPage(
@@ -359,8 +340,7 @@ class _HomeContentState extends State<HomeContent> {
                       Positioned(
                         right: 8,
                         child: IconButton(
-                          icon: const Icon(Icons.arrow_forward_ios,
-                              color: Colors.white),
+                          icon: const Icon(Icons.arrow_forward_ios, color: Colors.white),
                           onPressed: () {
                             if (_currentPromo < 2) {
                               _promoController.nextPage(
@@ -376,7 +356,6 @@ class _HomeContentState extends State<HomeContent> {
               ],
             ),
           ),
-          // app title section
           Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             padding: const EdgeInsets.all(16),
@@ -400,29 +379,22 @@ class _HomeContentState extends State<HomeContent> {
               ],
             ),
           ),
-          // coffee grid section
           Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: OrientationBuilder(
               builder: (context, orientation) {
-                final isPortrait =
-                    MediaQuery.of(context).orientation == Orientation.portrait;
+                final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
                 final int cols = isPortrait ? 2 : 3;
-
                 final double screenWidth = MediaQuery.of(context).size.width;
                 const double horizontalPadding = 16 * 2;
                 const double spacing = 16.0;
-
                 final double available = screenWidth - horizontalPadding;
                 const double extraForText = 52.0;
-                final double tileWidth =
-                    (available - (cols - 1) * spacing) / cols;
-
+                final double tileWidth = (available - (cols - 1) * spacing) / cols;
                 final double tileHeight = isPortrait
                     ? tileWidth + extraForText + 8
                     : tileWidth + extraForText + 18;
-
                 return GridView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
@@ -453,7 +425,6 @@ class _HomeContentState extends State<HomeContent> {
   }
 }
 
-// promo card widget
 class PromoCard extends StatelessWidget {
   final String image;
   final String text;
@@ -477,7 +448,6 @@ class PromoCard extends StatelessWidget {
   }
 }
 
-// coffee card widget
 class CoffeeCard extends StatelessWidget {
   final String name;
   final double price;
@@ -489,8 +459,7 @@ class CoffeeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cs = Theme.of(context).colorScheme;
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
     final double imageHeight = isPortrait ? 140 : 200;
 
     return Container(
@@ -504,12 +473,10 @@ class CoffeeCard extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               border: Border.all(color: coffeeStripColor, width: 2),
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(16)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
             ),
             child: ClipRRect(
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(14)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
               child: Container(
                 height: imageHeight,
                 width: double.infinity,

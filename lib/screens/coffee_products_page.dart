@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'coffee_detail_page.dart';
 
@@ -14,7 +15,6 @@ class CoffeeProductsPage extends StatefulWidget {
 }
 
 class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
-  // Coffee categories
   final List<String> categories = const [
     'Cappuccino',
     'Americano',
@@ -24,14 +24,13 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
     'Latte',
   ];
 
-  int selectedIndex = 0; // which category is selected
-  List<Map<String, dynamic>> allProducts = []; // all products
-  bool isLoading = true; // loading indicator
+  int selectedIndex = 0;
+  List<Map<String, dynamic>> allProducts = [];
+  bool isLoading = true;
 
   final TextEditingController searchController = TextEditingController();
   String searchQuery = "";
 
-  // Colors
   static const coffeePrimary = Color(0xFFB87352);
   static const coffeeSecondary = Color(0xFF4E342E);
   static const lightBg = Colors.white;
@@ -45,33 +44,53 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
     loadProducts();
   }
 
-  // Load products from internet (GitHub) or fallback to local JSON
+  Future<void> saveCoffeeData(String jsonData) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('coffee_data', jsonData);
+  }
+
+  Future<void> loadSavedCoffeeData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedData = prefs.getString('coffee_data');
+    if (savedData != null) {
+      final List data = jsonDecode(savedData);
+      allProducts = data.cast<Map<String, dynamic>>();
+    }
+  }
+
   Future<void> loadProducts() async {
     setState(() => isLoading = true);
 
     try {
       final connectivityResult = await Connectivity().checkConnectivity();
 
-      // Try loading from internet first
       if (connectivityResult != ConnectivityResult.none) {
         final response = await http.get(
-          Uri.parse("https://raw.githubusercontent.com/Hussain-Fazil/coffee_app_data/main/products.json"),
+          Uri.parse(
+              "https://raw.githubusercontent.com/Hussain-Fazil/coffee_app_data/main/products.json"),
         );
+
         if (response.statusCode == 200) {
           final List data = jsonDecode(response.body);
           allProducts = data.cast<Map<String, dynamic>>();
+
+          // Save for offline use
+          await saveCoffeeData(response.body);
         }
+      } else {
+        // Offline: Load saved data
+        await loadSavedCoffeeData();
       }
 
-      // If nothing came from internet, load from local JSON
       if (allProducts.isEmpty) {
-        final String localData = await rootBundle.loadString("assets/products.json");
+        final String localData =
+            await rootBundle.loadString("assets/products.json");
         final List data = jsonDecode(localData);
         allProducts = data.cast<Map<String, dynamic>>();
       }
-    } catch (_) {
-      // In case of error, still load local JSON
-      final String localData = await rootBundle.loadString("assets/products.json");
+    } catch (e) {
+      final String localData =
+          await rootBundle.loadString("assets/products.json");
       final List data = jsonDecode(localData);
       allProducts = data.cast<Map<String, dynamic>>();
     }
@@ -79,7 +98,6 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
     setState(() => isLoading = false);
   }
 
-  // Filter products by category + search
   List<Map<String, dynamic>> getProductsForCategory() {
     if (allProducts.isEmpty) return [];
     final category = categories[selectedIndex];
@@ -93,18 +111,15 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     final Color bodyBg = isDark ? darkBg : lightBg;
     final Color cardBg = isDark ? darkSurface : lightCard;
     final Color textColor = isDark ? Colors.white : const Color(0xFF2C2C2C);
     final Color hintColor = isDark ? Colors.white70 : Colors.brown.shade400;
 
     final products = getProductsForCategory();
-
-    // Responsive layout: portrait = 2 columns, landscape = 3
-    final bool isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final bool isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     final int gridCols = isPortrait ? 2 : 3;
-
     final double imageHeight = isPortrait ? 120 : 150;
     final double nameFont = isPortrait ? 14 : 18;
     final double priceFont = isPortrait ? 13 : 16;
@@ -113,6 +128,7 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
     return Scaffold(
       backgroundColor: bodyBg,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: isDark ? Colors.black : coffeeSecondary,
         elevation: 0,
         title: const Text(
@@ -124,19 +140,21 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
           ? const Center(child: CircularProgressIndicator())
           : CustomScrollView(
               slivers: [
-                // Search bar + categories
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                     child: Column(
                       children: [
-                        // Search bar
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 10),
                           decoration: BoxDecoration(
                             color: cardBg,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: isDark ? Colors.white24 : coffeeSecondary),
+                            border: Border.all(
+                                color: isDark
+                                    ? Colors.white24
+                                    : coffeeSecondary),
                           ),
                           child: Row(
                             children: [
@@ -145,8 +163,10 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                               Expanded(
                                 child: TextField(
                                   controller: searchController,
-                                  onChanged: (val) => setState(() => searchQuery = val),
-                                  style: TextStyle(color: textColor, fontSize: 14),
+                                  onChanged: (val) =>
+                                      setState(() => searchQuery = val),
+                                  style: TextStyle(
+                                      color: textColor, fontSize: 14),
                                   cursorColor: coffeePrimary,
                                   decoration: InputDecoration(
                                     isDense: true,
@@ -162,36 +182,42 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                     searchController.clear();
                                     setState(() => searchQuery = "");
                                   },
-                                  child: const Icon(Icons.close, size: 18, color: Colors.grey),
+                                  child: const Icon(Icons.close,
+                                      size: 18, color: Colors.grey),
                                 ),
                             ],
                           ),
                         ),
                         const SizedBox(height: 16),
-
-                        // Categories
                         SizedBox(
                           height: 42,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             itemCount: categories.length,
-                            separatorBuilder: (_, __) => const SizedBox(width: 10),
+                            separatorBuilder: (_, __) =>
+                                const SizedBox(width: 10),
                             itemBuilder: (context, i) {
                               final selected = i == selectedIndex;
                               return GestureDetector(
                                 onTap: () => setState(() => selectedIndex = i),
                                 child: AnimatedContainer(
-                                  duration: const Duration(milliseconds: 180),
-                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                  duration:
+                                      const Duration(milliseconds: 180),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 14, vertical: 8),
                                   decoration: BoxDecoration(
                                     color: selected
-                                        ? (isDark ? coffeePrimary : coffeeSecondary)
+                                        ? (isDark
+                                            ? coffeePrimary
+                                            : coffeeSecondary)
                                         : Colors.transparent,
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
                                       color: selected
                                           ? Colors.transparent
-                                          : (isDark ? Colors.white24 : Colors.brown.shade300),
+                                          : (isDark
+                                              ? Colors.white24
+                                              : Colors.brown.shade300),
                                     ),
                                   ),
                                   child: Center(
@@ -202,7 +228,9 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                         fontWeight: FontWeight.w600,
                                         color: selected
                                             ? Colors.white
-                                            : (isDark ? Colors.white70 : coffeeSecondary),
+                                            : (isDark
+                                                ? Colors.white70
+                                                : coffeeSecondary),
                                       ),
                                     ),
                                   ),
@@ -216,15 +244,14 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                     ),
                   ),
                 ),
-
-                // Products Grid
                 products.isEmpty
                     ? const SliverFillRemaining(
                         hasScrollBody: false,
                         child: Center(child: Text("No products found")),
                       )
                     : SliverPadding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         sliver: SliverGrid(
                           delegate: SliverChildBuilderDelegate(
                             (context, index) {
@@ -234,7 +261,8 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => CoffeeDetailPage(product: coffee),
+                                      builder: (_) =>
+                                          CoffeeDetailPage(product: coffee),
                                     ),
                                   );
                                 },
@@ -243,7 +271,9 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                     color: cardBg,
                                     borderRadius: BorderRadius.circular(24),
                                     border: Border.all(
-                                      color: isDark ? Colors.white24 : coffeeSecondary,
+                                      color: isDark
+                                          ? Colors.white24
+                                          : coffeeSecondary,
                                       width: 2,
                                     ),
                                   ),
@@ -268,20 +298,25 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                         ),
                                       ),
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: List.generate(
                                           5,
                                           (i) => Icon(
                                             Icons.star,
                                             size: starSize,
-                                            color: i < 4 ? Colors.amber : Colors.grey,
+                                            color: i < 4
+                                                ? Colors.amber
+                                                : Colors.grey,
                                           ),
                                         ),
                                       ),
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 12, vertical: 8),
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               "\$${coffee["price"]}",
@@ -293,11 +328,16 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                             ),
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: isDark ? coffeePrimary : coffeeSecondary,
+                                                color: isDark
+                                                    ? coffeePrimary
+                                                    : coffeeSecondary,
                                                 shape: BoxShape.circle,
                                               ),
                                               child: Icon(Icons.add,
-                                                  size: isPortrait ? 18 : 22, color: Colors.white),
+                                                  size: isPortrait
+                                                      ? 18
+                                                      : 22,
+                                                  color: Colors.white),
                                             ),
                                           ],
                                         ),
@@ -309,7 +349,8 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                             },
                             childCount: products.length,
                           ),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: gridCols,
                             mainAxisSpacing: 14,
                             crossAxisSpacing: 14,
@@ -317,8 +358,10 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                           ),
                         ),
                       ),
-
-                SliverToBoxAdapter(child: SizedBox(height: MediaQuery.of(context).padding.bottom + 8)),
+                SliverToBoxAdapter(
+                    child: SizedBox(
+                        height:
+                            MediaQuery.of(context).padding.bottom + 8)),
               ],
             ),
     );

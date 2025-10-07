@@ -18,19 +18,44 @@ class AuthService {
       "phone": phone,
       "photoUrl": "",
       "createdAt": FieldValue.serverTimestamp(),
-    }, SetOptions(merge: true));
+    });
 
     return userCredential;
   }
 
   Future<UserCredential> loginWithEmail(String email, String password) async {
-    return await _auth.signInWithEmailAndPassword(
+    final userCredential = await _auth.signInWithEmailAndPassword(
       email: email.trim(),
       password: password,
     );
+
+    await _auth.currentUser?.reload();
+
+    final userDoc =
+        _firestore.collection("users").doc(userCredential.user!.uid);
+    final docSnap = await userDoc.get();
+
+    if (!docSnap.exists) {
+      await userDoc.set({
+        "username": userCredential.user?.displayName ?? "Guest",
+        "email": userCredential.user?.email,
+        "phone": "",
+        "photoUrl": "",
+        "createdAt": FieldValue.serverTimestamp(),
+      });
+    }
+
+    return userCredential;
   }
 
   Future<void> sendPasswordResetEmail(String email) async {
+    final list = await _auth.fetchSignInMethodsForEmail(email.trim());
+    if (list.isEmpty) {
+      throw FirebaseAuthException(
+        code: 'user-not-found',
+        message: 'No user found with this email.',
+      );
+    }
     await _auth.sendPasswordResetEmail(email: email.trim());
   }
 
