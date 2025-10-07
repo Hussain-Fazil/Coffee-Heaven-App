@@ -16,7 +16,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final AuthService _auth = AuthService();
   bool _isLoading = false;
   bool _obscurePassword = true;
@@ -54,11 +53,17 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomePage()),
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => const HomePage(),
+          transitionsBuilder: (_, animation, __, child) => FadeTransition(
+            opacity: animation,
+            child: child,
+          ),
+          transitionDuration: const Duration(milliseconds: 400),
+        ),
       );
     } catch (e) {
       String errorMessage = "Login failed. Please try again.";
-
       if (e.toString().contains('user-not-found')) {
         errorMessage = "No account found with this email.";
       } else if (e.toString().contains('wrong-password')) {
@@ -68,7 +73,6 @@ class _LoginPageState extends State<LoginPage> {
       } else if (e.toString().contains('network-request-failed')) {
         errorMessage = "Network error. Check your connection.";
       }
-
       _showSnack(errorMessage);
     }
 
@@ -168,9 +172,17 @@ class _LoginPageState extends State<LoginPage> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (_) =>
-                                        const ForgotPasswordPage()),
+                                PageRouteBuilder(
+                                  pageBuilder: (_, __, ___) => const ForgotPasswordPage(),
+                                  transitionsBuilder: (_, animation, __, child) => SlideTransition(
+                                    position: Tween<Offset>(
+                                      begin: const Offset(1, 0),
+                                      end: Offset.zero,
+                                    ).animate(animation),
+                                    child: child,
+                                  ),
+                                  transitionDuration: const Duration(milliseconds: 400),
+                                ),
                               );
                             },
                             child: const Text(
@@ -191,9 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             child: _isLoading
-                                ? const CircularProgressIndicator(
-                                    color: Colors.white,
-                                  )
+                                ? const CircularProgressIndicator(color: Colors.white)
                                 : const Text(
                                     "Log In",
                                     style: TextStyle(
@@ -217,8 +227,17 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(
-                                builder: (_) => const SignupPage()),
+                            PageRouteBuilder(
+                              pageBuilder: (_, __, ___) => const SignupPage(),
+                              transitionsBuilder: (_, animation, __, child) => SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(1, 0),
+                                  end: Offset.zero,
+                                ).animate(animation),
+                                child: child,
+                              ),
+                              transitionDuration: const Duration(milliseconds: 400),
+                            ),
                           );
                         },
                         child: const Text(

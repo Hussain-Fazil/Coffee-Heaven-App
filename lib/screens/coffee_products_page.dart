@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'coffee_detail_page.dart';
 
 class CoffeeProductsPage extends StatefulWidget {
@@ -73,12 +72,9 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
         if (response.statusCode == 200) {
           final List data = jsonDecode(response.body);
           allProducts = data.cast<Map<String, dynamic>>();
-
-          // Save for offline use
           await saveCoffeeData(response.body);
         }
       } else {
-        // Offline: Load saved data
         await loadSavedCoffeeData();
       }
 
@@ -260,9 +256,20 @@ class _CoffeeProductsPageState extends State<CoffeeProductsPage> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
+                                    PageRouteBuilder(
+                                      pageBuilder: (_, __, ___) =>
                                           CoffeeDetailPage(product: coffee),
+                                      transitionsBuilder:
+                                          (_, animation, __, child) =>
+                                              SlideTransition(
+                                        position: Tween<Offset>(
+                                          begin: const Offset(1, 0),
+                                          end: Offset.zero,
+                                        ).animate(animation),
+                                        child: child,
+                                      ),
+                                      transitionDuration:
+                                          const Duration(milliseconds: 400),
                                     ),
                                   );
                                 },
